@@ -1,0 +1,47 @@
+\documentclass{ltjsarticle}
+\usepackage{luatexja} 
+\usepackage{bm}
+\title{ベイズ統計学入門}
+\author{FooQoo}
+\begin{document}
+\date{2019/1/14}
+\maketitle
+\section{確率の復習}
+\subsection{確率の定義}
+事象$A$の起こる確率$p$を次のように一般化する。
+ただし起こりうる全ての事象は等確率で発生する。
+\begin{equation}
+    p=\frac{事象Aの起こる場合の数}{起こりうる全ての場合の数}
+\end{equation}
+起こりうる全ての事象の集合$U$を標本空間と呼ぶ。
+$U$の個数に対する、事象$A$が発生する要素の個数で割った値を「数学的確率」とする。
+一方で、何回も試行を繰り返した時、得られる事象$A$の割合を「統計的確率」と呼ぶ。
+
+\subsection{同時確率}
+事象$A$と$B$を考える。
+$A$と$B$が同時に起こる事象を$A \cap B$と表す。
+この確率を、$P(A \cap B)$と表し、同時確率と呼ぶ。
+
+\subsection{条件付き確率}
+ある事象$A$が起こった条件のもとで事象$B$の起こる確率を、条件付き確率と呼ぶ。
+条件付き確率は、$P(B|A)$で表し、以下の式で計算される。
+\begin{equation}
+    P(B|A)=\frac{P(A \cap B)}{P(A)}
+\end{equation}
+
+確率の定義のみ用いた証明は以下。
+\begin{eqnarray}
+    P(B|A)=\frac{n_{A \cap B}}{n_A}, & & P(A \cap B)=\frac{n_{A \cap B}}{n_U}, P(A)=\frac{n_A}{n_U}より \nonumber \\
+    P(B|A)=& &\frac{n_{A \cap B}}{n_A} \\
+    =& &\frac{n_U}{n_A} \frac{n_{A \cap B}}{n_U} \\
+    =& &\frac{1}{\frac{n_A}{n_U}}\frac{n_{A \cap B}}{n_U} \\
+    =& &\frac{P(A \cap B)}{P(A)}
+\end{eqnarray}
+
+\subsection{確率の乗法定理}
+同時確率と条件付き確率を整理すると以下の式が導出される。
+\begin{equation}
+    P(A \cap B)=P(A) P(B|A)
+\end{equation}
+
+\end{document}
