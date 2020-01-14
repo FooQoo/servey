@@ -1,0 +1,16 @@
+\documentclass{ltjsarticle}
+\usepackage{luatexja} 
+\usepackage{bm}
+\title{ロジスティック回帰入門}
+\author{FooQoo}
+\begin{document}
+\maketitle
+\section{概要}
+ロジスティック回帰は以下の式で予測を行う。
+\begin{equation}
+    p = \frac{1}{1+\exp(-(a_1 x_1 + a_2 x_2 + \cdots + a_n x_n + b))}
+\end{equation}
+$x_i$でどんな値をとっても目的変数が0から1の間に収まる。
+$a_i$に対する$x_i$は偏回帰係数である。
+
+\end{document}
