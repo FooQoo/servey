@@ -2,5 +2,5 @@
 
 ```
 # Compile latex
-$ lualatex docs/test.tex
+$sh etc/compile.sh -i test.tex 
 ```
