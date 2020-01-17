@@ -1,0 +1,46 @@
+\documentclass{ltjsarticle}
+\usepackage{luatexja} 
+\usepackage{bm}
+\title{ロジスティック回帰入門(2)}
+\author{FooQoo}
+\begin{document}
+\maketitle
+\section{概要}
+調査結果を解釈する指標として、「リスク比」と「オッズ比」がある。
+本稿では、これらの指標についての理解、その違い、有意差の算出方法を紹介する。
+
+\section{分割表}
+リスク比やオッズ比、そして有意差を算出するためには、分割表が必要になる。
+表\ref{tbl:sample}は10人の患者について調べたものである。
+このデータに対して、不整脈が喫煙者と非喫煙者を比較した時、両者に差があるか確認する。
+
+\begin{table}[b]
+    \caption{データ例}
+    \label{tbl:sample}
+    \centering
+    \begin{tabular}{r|r|r} \hline
+        \multicolumn{1}{l}{患者No.} & \multicolumn{1}{|l|}{喫煙有無} & \multicolumn{1}{l}{不整脈有無} \\ \hline \hline
+        1 & 0 & 0 \\ \hline
+    \end{tabular}
+\end{table}
+
+データを読み取ると、喫煙者において不整脈の割合は$60\%$で、非喫煙者における不整脈のある人の割合は$20\%$であることがわかる。
+この結果を表にしたものを分割表(contingency table)と呼び、表\ref{tbl:c}として表す。
+
+\begin{table}[b]
+    \caption{分割表}
+    \label{tbl:c}
+    \centering
+    \begin{tabular}{l|r|r|r|r} \hline 
+        \multicolumn{1}{l}{喫煙有無} & \multicolumn{2}{|l|}{不整脈有無} & \multicolumn{1}{|l|}{横計} & \multicolumn{1}{l}{割合}\\ \cline{2-3}
+        & ある & ない & & \\ \hline \hline
+        喫煙 & 3 & 1 & 5 & $60\%$ \\
+        非喫煙 & 1 & 4 & 5 & $20\%$ \\ \hline 
+    \end{tabular}
+\end{table}
+
+
+\begin{thebibliography}{1}
+    \bibitem{istat} 株式会社アイスタット https://istat.co.jp/sk\_commentary/risk\_odds
+\end{thebibliography}
+\end{document}
