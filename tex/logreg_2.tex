@@ -1,6 +1,18 @@
 \documentclass{ltjsarticle}
 \usepackage{luatexja} 
 \usepackage{bm}
+%subcaptionのためのまじない
+\makeatletter
+\let\MYcaption\@makecaption
+\makeatother
+
+\usepackage{subcaption}
+\captionsetup{compatibility=false}      
+
+\makeatletter
+\let\@makecaption\MYcaption
+\makeatother
+%
 \title{ロジスティック回帰入門(2)}
 \author{FooQoo}
 \begin{document}
@@ -26,18 +38,126 @@
 
 データを読み取ると、喫煙者において不整脈の割合は$60\%$で、非喫煙者における不整脈のある人の割合は$20\%$であることがわかる。
 この結果を表にしたものを分割表(contingency table)と呼び、表\ref{tbl:c}として表す。
+原因と結果の関係を調べるために分割表を作る場合、行に原因、列に結果の項目を置く。
 
 \begin{table}[b]
     \caption{分割表}
     \label{tbl:c}
     \centering
     \begin{tabular}{l|r|r|r|r} \hline 
-        \multicolumn{1}{l}{喫煙有無} & \multicolumn{2}{|l|}{不整脈有無} & \multicolumn{1}{|l|}{横計} & \multicolumn{1}{l}{割合}\\ \cline{2-3}
+        \multicolumn{1}{l}{喫煙有無} & \multicolumn{2}{|l|}{不整脈有無} & \multicolumn{1}{l|}{横計} & \multicolumn{1}{l}{割合}\\ \cline{2-3}
         & ある & ない & & \\ \hline \hline
         喫煙 & 3 & 1 & 5 & $60\%$ \\
         非喫煙 & 1 & 4 & 5 & $20\%$ \\ \hline 
     \end{tabular}
 \end{table}
+
+\section{リスク比}
+表\ref{tbl:c}の横軸で割って得られた割合はリスクである。
+このケースでは、不整脈になる危険や恐れが喫煙の有無によって、どの程度あるのかがわかる。
+次に、リスクを喫煙者と非喫煙者でそれぞれ計算する。
+喫煙者が不整脈となるリスクは$3/5$で$60\%$、非喫煙者が不整脈となるリスクは$20\%$である。
+リスクの差に着目すると、リスクは喫煙者が非喫煙者を$40\%$を上回っているということがわかる。
+喫煙者のリスクを非喫煙者のリスクで割ると、その比は$3:1$となる。
+この値をリスク比(Risk Ratio)と呼ぶ。
+この場合では、リスク比3より、「喫煙者が不整脈となるリスクは非喫煙者に比べ3倍である」と解釈できる。
+
+\section{オッズ比}
+簡単な例によってオッズ比を紹介する。
+あるゲームを5セットを1回として計2回やったとする。
+表\ref{tbl:score}は1回目と2回目のゲームの勝敗の成績を示したものである。
+勝率の比、すなわちリスク比は3になる。
+リスク比から、1回目の勝率は2回目に比べ3倍であり、勝率をゲームの強さと考えると、1回目のゲームの強さは2回目に比べて3倍強いといえる。
+
+次にこの表を利用して、オッズ比について説明する。
+1回目の勝数を2回目の勝数で割った値をオッズ(Odds)と呼ぶ。
+そして、1回目の負数を2回目の負数で割った値もオッズと呼ぶ。
+勝数に着目すると、1回目と2回目で勝数のオッズは3です。
+負数に着目すると、1回目と2回目で負数のオッズは0.5となる。
+そしてオッズ比は、勝数オッズと負数オッズの比となる。
+この場合のオッズ比は6となる。
+ここで注意するのは、1回目のゲームの強さが2回目より6倍とすることは間違いであることである。
+このような勝率の比較はリスク比でしかできない。
+オッズ比でわかるのは、結果に対する影響要因であるかどうかである。
+今回得られたオッズ比は、6と大きい値であるため、不整脈の影響要因と考えてもよい。
+
+\begin{table}[b]
+    \caption{成績表}
+    \label{tbl:score}
+    \centering
+    \begin{tabular}{l|r|r|r|r} \hline 
+        \multicolumn{1}{l}{勝負回数} & \multicolumn{2}{|l|}{ゲーム} & \multicolumn{1}{l|}{ゲーム数} & \multicolumn{1}{l}{割合}\\ \cline{2-3}
+        & 勝回 & 負数 & & \\ \hline \hline
+        1 & 3 & 2 & 5 & $60\%$ \\
+        2 & 1 & 4 & 5 & $20\%$ \\ \hline 
+    \end{tabular}
+\end{table}
+
+先ほどの例では、オッズ比の有用性を説明しにくいため、新たに喫煙の有無、飲酒の有無、性別を取り上げ、どの要因が不整脈の有無に影響を与えているか調べることにする。
+表\ref{tbl:score_2}にそれぞれの要因についての分割表を示す。
+リスク比の順位を見ると、喫煙が$6.67$、飲酒が$1.67$、性別が$1.07$の順となる。
+そして、オッズ比の順位は、喫煙が$9.97$、飲酒が$3.00$、性別が$1.14$で順位はリスク比と同一である。
+この場合はリスク比とオッズ比のどちらを用いても不整脈の影響を把握することができる。
+一方で研究目的によっては、影響要因の順位がわかればよい場合もあるので、オッズ比が必要となるシーンは多い。
+ただし、オッズ比を使う場合は有意差検定が必要となる。
+まとめると、オッズ比は、複数の影響要因の寄与順位を把握することのみに活用でき、リスクの倍率把握には適用できない、ということになる。
+
+リスク比およびオッズ比が1を上回る時、正の相関があると呼び、反対に1を下回る場合は、逆相関があると呼ぶ。
+逆相関の場合、リスクの比の解釈がわかりにくくなるため、要因のポジネガを入れ替えると正の相関になり解釈しやすくなる。
+
+\begin{table}[b]
+    \caption{多数ある影響要因の比較}
+    \label{tbl:score_2}
+    \centering
+    \begin{tabular}{c}
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{喫煙と不整脈の分割表}
+            \begin{tabular}{l|r|r|r|r} \hline 
+                \multicolumn{1}{l}{喫煙の有無} & \multicolumn{2}{|l|}{不整脈} & \multicolumn{1}{l|}{横計} & \multicolumn{1}{l}{リスク}\\ \cline{2-3}
+                & あり & なし & & \\ \hline \hline
+                喫煙 & 12 & 3 & 15 & $80\%$ \\
+                非喫煙 & 3 & 7 & 10 & $30\%$ \\ \hline 
+                オッズ & 4.00 & 0.43 & \multicolumn{2}{|l}{} \\ \hline
+            \end{tabular}
+        \end{minipage} \\
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{飲酒と不整脈の分割表}
+            \begin{tabular}{l|r|r|r|r} \hline 
+                \multicolumn{1}{l}{飲酒の有無} & \multicolumn{2}{|l|}{不整脈} & \multicolumn{1}{l|}{横計} & \multicolumn{1}{l}{リスク}\\ \cline{2-3}
+                & あり & なし & & \\ \hline \hline
+                飲酒 & 10 & 5 & 15 & $66.8\%$ \\
+                非飲酒 & 4 & 6 & 10 & $40.0\%$ \\ \hline 
+                オッズ & 2.50 & 0.83 & \multicolumn{2}{|l}{} \\ \hline
+            \end{tabular}
+        \end{minipage} \\
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{性別と不整脈の分割表}
+            \begin{tabular}{l|r|r|r|r} \hline 
+                \multicolumn{1}{l}{性別} & \multicolumn{2}{|l|}{不整脈} & \multicolumn{1}{l|}{横計} & \multicolumn{1}{l}{リスク}\\ \cline{2-3}
+                & あり & なし & & \\ \hline \hline
+                男性 & 8 & 7 & 15 & $53.3\%$ \\
+                女性 & 5 & 5 & 10 & $50.0\%$ \\ \hline 
+                オッズ & 1.60 & 1.40 & \multicolumn{2}{|l}{} \\ \hline
+            \end{tabular}
+        \end{minipage} \\
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{リスク比とオッズ比}
+            \begin{tabular}{l|r|r} \hline 
+                要因& \multicolumn{1}{|l|}{リスク比} & \multicolumn{1}{l}{オッズ比} \\\hline \hline
+                喫煙& 2.67 & 9.33  \\
+                飲酒& 1.67 & 3.00 \\
+                性別& 1.07 & 1.14 \\ \hline 
+            \end{tabular}
+        \end{minipage}
+
+    \end{tabular}
+\end{table}
+
+\section{オッズ比の活用法}
 
 
 \begin{thebibliography}{1}
