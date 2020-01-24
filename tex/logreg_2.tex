@@ -158,9 +158,200 @@
 \end{table}
 
 \section{オッズ比の活用法}
+代表的な臨床研究として、「コホート研究」と「ケースコントロール研究」がある。
+
+\begin{itemize}
+    \item コホート研究。
+          例えば、不整脈が無い人をランダムに400人抽出し、今までに喫煙したことがあるかどうかを調査し、その後の2年間において、喫煙の有無別に不整脈が発生したか追跡調査する。
+          調査開始時点では不整脈は発生しておらず、それから2年後に不整脈の発生を調べる。
+          この研究は、2年後の未来へ向かって調べる研究であり、前向きの研究と呼ぶ。
+    \item ケースコントロール研究。
+          不整脈があると診断された200人とランダムに選んだ健常者200人について、過去の過去の有無を調査する。
+          すでに不整脈があると診断された人と健常者がいて、その時点から過去に遡って喫煙をしていたかどうかを調べる。
+          この研究は、過去へ向かって調べる研究であり、後ろ向きの研究呼ぶ。
+\end{itemize}
+これらの研究の違いを、原因と結果という因果関係から見る。
+上記の例では、喫煙の有無が原因変数で不整脈が結果変数です。
+コホート研究は、未来の結果変数(不整脈の有無)を調べる研究であり、ケースコントロールは過去の原因変数(喫煙の有無)を調べる研究である。
+
+後ろ向き研究で集めたデータから分割表を作成し、喫煙者が不整脈になるリスクが$56\%$であることがわかった時、一般的に喫煙する人が不整脈になるリスクが5割を超えているとみなしてよいか？
+この事例では、不整脈があると診断された200人とランダムに選んだ健常人者200人について、過去の喫煙の有無を調査した。
+したがって、全対象者における不整脈のリスクは200/500の$50\%$で調査対象者のサンプリングに依存する。
+ただし、リスク比の値を順位で検討するだけであれば、リスク比を使用できる。
+しかし、この制限下でリスク比を用いるならば、最初からオッズ比を使えば良い。
+以上の理由から、ケースコントロール研究ではオッズ比を使う。
+
+\section{オッズ比とロジスティック回帰}
+表\ref{tbl:logistic}から、結果に対していくつかの原因が考えられる場合、それぞれの原因が、結果にどの程度影響を及ぼしているか考える。
+この表を見ただけでは、結果がわかりにくいため、分割表・オッズ比・リスク比を求める。
+
+
+\begin{table}[b]
+    \caption{ロジスティック回帰のためのデータ}
+    \label{tbl:logistic}
+    \centering
+    \begin{tabular}{r|r|r|r|r} \hline
+        \multicolumn{1}{l}{患者No.} & \multicolumn{1}{|l|}{不整脈有無} & \multicolumn{1}{l|}{喫煙有無} & \multicolumn{1}{l|}{飲酒有無} & \multicolumn{1}{l}{ギャンブル嗜好} \\ \hline \hline
+        1 & 1 & 1 & 1 & 1 \\ 
+        2 & 1 & 1 & 1 & 1 \\ 
+        3 & 1 & 1 & 1 & 1 \\ 
+        4 & 1 & 1 & 0 & 1 \\ 
+        5 & 1 & 1 & 0 & 1 \\ 
+        6 & 1 & 1 & 0 & 0 \\ 
+        7 & 1 & 0 & 1 & 0 \\ 
+        8 & 1 & 0 & 0 & 0 \\ 
+        9 & 0 & 1 & 0 & 1 \\ 
+        10 & 0 & 1 & 0 & 0 \\ 
+        11 & 0 & 0 & 1 & 0 \\ 
+        12 & 0 & 0 & 1 & 0 \\ 
+        13 & 0 & 0 & 0 & 1 \\ 
+        14 & 0 & 0 & 0 & 0 \\ 
+        15 & 0 & 0 & 0 & 0 \\ 
+        16 & 0 & 0 & 0 & 0 \\ 
+        17 & 0 & 0 & 0 & 0 \\ 
+        18 & 0 & 0 & 0 & 0 \\ 
+        19 & 0 & 0 & 0 & 0 \\ 
+        20 & 0 & 0 & 0 & 0 \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[b]
+    \caption{多数ある影響要因の比較}
+    \label{tbl:score_3}
+    \centering
+    \begin{tabular}{c}
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{喫煙と不整脈の分割表}
+            \begin{tabular}{l|r|r|r|r} \hline 
+                \multicolumn{1}{l}{喫煙の有無} & \multicolumn{2}{|l|}{不整脈} & \multicolumn{1}{l|}{横計} & \multicolumn{1}{l}{リスク}\\ \cline{2-3}
+                & あり & なし & & \\ \hline \hline
+                喫煙 & 6 & 2 & 8 & $75.0\%$ \\
+                非喫煙 & 2 & 10 & 12 & $16.7\%$ \\ \hline 
+                オッズ & 3.00 & 0.2 & \multicolumn{2}{|l}{} \\ \hline
+            \end{tabular}
+        \end{minipage} \\
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{飲酒と不整脈の分割表}
+            \begin{tabular}{l|r|r|r|r} \hline 
+                \multicolumn{1}{l}{飲酒の有無} & \multicolumn{2}{|l|}{不整脈} & \multicolumn{1}{l|}{横計} & \multicolumn{1}{l}{リスク}\\ \cline{2-3}
+                & あり & なし & & \\ \hline \hline
+                飲酒 & 4 & 2 & 6 & $66.7\%$ \\
+                非飲酒 & 4 & 10 & 14 & $28.6\%$ \\ \hline 
+                オッズ & 1.00 & 0.2 & \multicolumn{2}{|l}{} \\ \hline
+            \end{tabular}
+        \end{minipage} \\
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{ギャンブル好きと不整脈の分割表}
+            \begin{tabular}{l|r|r|r|r} \hline 
+                \multicolumn{1}{l}{ギャンブル好き} & \multicolumn{2}{|l|}{不整脈} & \multicolumn{1}{l|}{横計} & \multicolumn{1}{l}{リスク}\\ \cline{2-3}
+                & あり & なし & & \\ \hline \hline
+                男性 & 5 & 2 & 7 & $71.4\%$ \\
+                女性 & 3 & 10 & 13 & $23.1\%$ \\ \hline 
+                オッズ & 1.67 & 0.20 & \multicolumn{2}{|l}{} \\ \hline
+            \end{tabular}
+        \end{minipage} \\
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{リスク比とオッズ比}
+            \begin{tabular}{l|r|r} \hline 
+                要因& \multicolumn{1}{|l|}{リスク比} & \multicolumn{1}{l}{オッズ比} \\\hline \hline
+                喫煙& 4.50 & 15.00  \\
+                飲酒& 2.33 & 5.00 \\
+                ギャンブル好き& 3.10 & 8.33 \\ \hline 
+            \end{tabular}
+        \end{minipage}
+    \end{tabular}
+\end{table}
+この結果を解釈する。
+結果より、不整脈に影響度のもっとも強いのは喫煙の有無、次にギャンブル嗜好である。
+飲酒の有無は3番目であった。
+この結果が事実かどうかは、それぞれの要因の関係を確認することによってわかる。
+表\ref{tbl:score_4}より以下のことが考察できる。
+ギャンブル好きは7人中6人が喫煙者、ギャンブル嫌いは13人中11人が非喫煙者である。
+リスク比も5.57と高く、両者に強い相関があると考えられる。
+飲酒の有無と喫煙の有無のリスク比は1.40、ギャンブル嗜好と飲酒の有無のリスク比は1.86とそれほど大きな値ではなく、関係性は弱い。
+
+\begin{table}[b]
+    \caption{原因要因相互の分割表}
+    \label{tbl:score_4}
+    \centering
+    \begin{tabular}{c}
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{飲酒と喫煙の分割表}
+            \begin{tabular}{l|r|r|r|r} \hline 
+                \multicolumn{1}{l}{飲酒の有無} & \multicolumn{2}{|l|}{喫煙の有無} & \multicolumn{1}{l|}{横計} & \multicolumn{1}{l}{リスク}\\ \cline{2-3}
+                & 喫煙 & 非喫煙 & & \\ \hline \hline
+                飲酒 & 3 & 3 & 6 & $50.0\%$ \\
+                非飲酒 & 5 & 9 & 14 & $35.7\%$ \\ \hline 
+                オッズ & 0.60 & 0.33 & \multicolumn{2}{|l}{} \\ \hline
+            \end{tabular}
+        \end{minipage} \\
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{ギャンブル好きと喫煙の分割表}
+            \begin{tabular}{l|r|r|r|r} \hline 
+                \multicolumn{1}{l}{ギャンブル好きの有無} & \multicolumn{2}{|l|}{喫煙の有無} & \multicolumn{1}{l|}{横計} & \multicolumn{1}{l}{リスク}\\ \cline{2-3}
+                & 喫煙 & 非喫煙 & & \\ \hline \hline
+                ギャンブル好き & 6 & 1 & 7 & $85.7\%$ \\
+                ギャンブル嫌い & 2 & 11 & 13 & $15.4\%$ \\ \hline 
+                オッズ & 3.00 & 0.09 & \multicolumn{2}{|l}{} \\ \hline
+            \end{tabular}
+        \end{minipage} \\
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{ギャンブル好きと飲酒の分割表}
+            \begin{tabular}{l|r|r|r|r} \hline 
+                \multicolumn{1}{l}{ギャンブル好き} & \multicolumn{2}{|l|}{飲酒} & \multicolumn{1}{l|}{横計} & \multicolumn{1}{l}{リスク}\\ \cline{2-3}
+                & 飲酒 & 非飲酒 & & \\ \hline \hline
+                ギャンブル好き & 3 & 4 & 7 & $42.9\%$ \\
+                ギャンブル嫌い & 3 & 10 & 13 & $23.1\%$ \\ \hline 
+                オッズ & 0.5 & 0.40 & \multicolumn{2}{|l}{} \\ \hline
+            \end{tabular}
+        \end{minipage} \\
+        \begin{minipage}{0.4\hsize}
+            \centering
+            \subcaption{リスク比とオッズ比}
+            \begin{tabular}{l|r|r} \hline 
+                要因& \multicolumn{1}{|l|}{リスク比} & \multicolumn{1}{l}{オッズ比} \\\hline \hline
+                飲酒-喫煙 & 1.40 & 1.80  \\
+                ギャンブル好き-喫煙 & 5.57 & 33.00 \\
+                ギャンブル好き-飲酒 & 1.86 & 2.50 \\ \hline 
+            \end{tabular}
+        \end{minipage}
+    \end{tabular}
+\end{table}
+
+次にロジスティック回帰を行う。
+表\ref{tbl:log_reg}より、ロジスティック回帰を行うと、オッズ比が出力される。
+オッズ比から順位が把握できるため、不整脈の原因要因の1位は喫煙の有無で、次に飲酒の有無となる。
+ギャンブル嗜好は、不整脈にそれほど影響がないことがわかる。
+リスク比の結果とオッズ比の結果が異なることは、原因要因が多数ある時は、ロジスティック回帰を使わなければならない。
+原因要因が相互に無関係と解釈できれば、分割表のオッズ比とロジスティック回帰のオッズ比の順位は同一となる。
+したがって、要因同士で強い相関がなければロジスティック回帰を適用できる。
+ここで表\ref{tbl:log_reg}のp値について説明する。
+p値が0.05以下であれば、今回のサンプル20人からでも何十万人という母集団についても、その原因は不整脈に影響を及ぼすと判断される。
+今回の場合は、どれも0.05以上なので、母集団においてこれらが原因であるかどうかはわからない。
+今回はサンプルが少ないため、サンプル数を増やすことが望まれる。
+
+\begin{table}[b]
+    \caption{データ例}
+    \label{tbl:log_reg}
+    \centering
+    \begin{tabular}{r|r|r|r} \hline
+        \multicolumn{1}{l}{変数名} & \multicolumn{1}{|l|}{回帰係数} & \multicolumn{1}{l|}{オッズ比} & \multicolumn{1}{l}{有意差判定} \\ \hline \hline
+        喫煙有無 & 2.643 & 14.053 & 0.090 \\
+        飲酒有無 & 1.948 & 7.018 & 0.162 \\
+        ギャンブル嗜好 & 0.504 & 1.655 & 0.079 \\ \hline
+    \end{tabular}
+\end{table}
 
 
 \begin{thebibliography}{1}
-    \bibitem{istat} 株式会社アイスタット https://istat.co.jp/sk\_commentary/risk\_odds
+    \bibitem{istat1} リスク比とオッズ比 https://istat.co.jp/sk\_commentary/risk\_odds
+    \bibitem{istat2} ロジスティック回帰 https://istat.co.jp/ta\_commentary/logistic
 \end{thebibliography}
 \end{document}
